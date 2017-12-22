@@ -6,6 +6,7 @@ Game Of Thrones ChatBot Trained using Seq2Seq Model on Game Of Thrones Subs and 
 * [Python 2.7](https://www.python.org)
 * [Tensorflow > 1.1](https://www.tensorflow.org/)
 * [nltk](https://pypi.python.org/pypi/nltk)
+* [flask](http://flask.pocoo.org/)
 
 ## Pretrained Model
 * Download Link: https://www.dropbox.com/s/o28ep1sachep2gc/checkpoints_got_bot.zip?dl=0
@@ -93,6 +94,9 @@ under their good head .
 Output Logits:  [[  0.29623079  11.3139143   -0.40246141 ...,  -0.67723441  -0.5055514
    -0.78701621]]  
 Output Greedy:  [5, 117, 6, 1, 184, 4, 3, 26, 11, 100, 3, 3, 4, 3, 3, 3, 3, 3, 3]  
-the only , <unk> again .  
--->   
-
+the only , <unk> again .    
+  
+## Instructions
+* Download Pretrained Model and extract in the checkpoints folder  
+* Run with 'python Got_Bot.py --m=chat'  
+* There are 3 modes, train, chat and api(for rest api using flask)  
