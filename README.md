@@ -21,8 +21,8 @@ Game Of Thrones ChatBot Trained using Seq2Seq Model on Game Of Thrones Subs and 
 
 The Data has been prepared from Game Of Thrones Subtitles(all episodes, https://www.opensubtitles.org) and Game Of Thrones Book(https://archive.org), All pre-processing and post-processing steps are available in Data_Prep file.
 
-GOT SUBS: https://www.opensubtitles.org/en/ssearch/sublanguageid-all/idmovie-63130
-GOT-BOOK: https://archive.org/details/A_Game_of_Thrones_Series
+GOT SUBS: https://www.opensubtitles.org/en/ssearch/sublanguageid-all/idmovie-63130  
+GOT-BOOK: https://archive.org/details/A_Game_of_Thrones_Series  
 
 It can be used to train on any set of subtitles within the same file.
 
