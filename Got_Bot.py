@@ -12,11 +12,14 @@ import time
 
 import numpy as np
 import tensorflow as tf
+from flask import Flask
 
 from BotModel import BotModel
 import Config_Params
 import Prep_Data
 
+# For API Mode: Flask
+app = Flask(__name__)
 
 def _get_random_bucket(train_buckets_scale):
     """ Random bucket for a training sample """
@@ -231,48 +234,53 @@ def chat():
         output_file.write('++++++++++++++++++++++++++++++++++++++\n')
         output_file.close()
 
-def chat_api(input_text):
-    
-    _, enc_vocab = Prep_Data.load_vocab(os.path.join(Config_Params.PROCESSED_PATH, 'vocab.enc'))
-    inv_dec_vocab, _ = Prep_Data.load_vocab(os.path.join(Config_Params.PROCESSED_PATH, 'vocab.dec'))
+# Function for Flask REST API
+model_run = 0
+saver = None
+model = None
+@app.route("/get/<string:query>")
+def chat_api(query):
+	global model_run
+	global saver
+	global model
+	if model_run == 0:
+	    model = BotModel(True, batch_size=1)
+	    model.build_graph()
 
-    model = BotModel(True, batch_size=1)
-    model.build_graph()
+	    saver = tf.train.Saver()
+	    model_run = 1
 
-    saver = tf.train.Saver()
+	with tf.Session() as sess:
+		    sess.run(tf.global_variables_initializer())
+		    _check_restore_parameters(sess, saver)
+		    
+		    _, enc_vocab = Prep_Data.load_vocab(os.path.join(Config_Params.PROCESSED_PATH, 'vocab.enc'))
+		    inv_dec_vocab, _ = Prep_Data.load_vocab(os.path.join(Config_Params.PROCESSED_PATH, 'vocab.dec'))
 
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        _check_restore_parameters(sess, saver)
-        
-        max_length = Config_Params.BUCKETS[-1][0]
-        print('GOT-BOT: Message Limit:', max_length)
-        while True:
-            # token-ids for the input sentence.
-            token_ids = Prep_Data.sentence2id(enc_vocab, str(input_text))
-            if (len(token_ids) > max_length):
-                print('Max length :', max_length)
-                line = _get_user_input()
-                continue
-            # Bucket Search
-            bucket_id = _find_right_bucket(len(token_ids))
-            # 1-element batch
-            encoder_inputs, decoder_inputs, decoder_masks = Prep_Data.get_batch([(token_ids, [])],
-                                                                           bucket_id,
-                                                                           batch_size=1)
-            # Get output logits for the sentence.
-            _, _, output_logits = run_step(sess, model, encoder_inputs, decoder_inputs,
-                                           decoder_masks, bucket_id, True)
-            response = _construct_response(output_logits, inv_dec_vocab)
-            print(response)
-            output_file.write('RESPONSE : ' + response + '\n')
-        output_file.write('++++++++++++++++++++++++++++++++++++++\n')
-        output_file.close()
+		    max_length = Config_Params.BUCKETS[-1][0]
+		    print('GOT-BOT: Message Limit:', max_length)
+		    while True:
+		        # token-ids for the input sentence.
+		        token_ids = Prep_Data.sentence2id(enc_vocab, str(query))
+		        if (len(token_ids) > max_length):
+		            print('Max length :', max_length)
+		            continue
+		        # Bucket Search
+		        bucket_id = _find_right_bucket(len(token_ids))
+		        # 1-element batch
+		        encoder_inputs, decoder_inputs, decoder_masks = Prep_Data.get_batch([(token_ids, [])],
+		                                                                       bucket_id,
+		                                                                       batch_size=1)
+		        # Get output logits for the sentence.
+		        _, _, output_logits = run_step(sess, model, encoder_inputs, decoder_inputs,
+		                                       decoder_masks, bucket_id, True)
+		        response = _construct_response(output_logits, inv_dec_vocab)
+		        return response
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--m', choices={'train', 'chat'},
+    parser.add_argument('--m', choices={'train', 'chat', 'api'},
                         default='train', help="mode. if not specified, it's in the train mode")
     args = parser.parse_args()
 
@@ -282,6 +290,8 @@ def main():
         train()
     elif args.m == 'chat':
         chat()
+    elif args.m == 'api':
+    	app.run(host='localhost', port=5003)   
 
 
 if __name__ == '__main__':

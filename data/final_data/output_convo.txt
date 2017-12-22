@@ -531,3 +531,27 @@ INPUT : huu
 RESPONSE : <unk> .
 INPUT : Tyrion
 RESPONSE : one had not more than the other .
+INPUT : who are you?
+RESPONSE : .
+INPUT : Who are you
+RESPONSE : Lannister . Tarth the Yes .
+INPUT : Who rules kings landing
+RESPONSE : Valar men with a Moon Kingdoms
+INPUT : where is my army of unsullied
+RESPONSE : i I have men i He s standing on the battlefield .
+INPUT : 'The man who passes the sentence should swing the sword.
+RESPONSE : under his side .
+INPUT : The things I do for love.
+RESPONSE : the way you So to do the man Lord <unk>
+INPUT : It's the family name that lives on. It's all that lives on.
+RESPONSE : And someone s proved <unk> they offered which which he commands .. by the air .
+INPUT : I learned how to die a long time ago.
+RESPONSE : i You come him with the <unk> i i This is bleed .
+INPUT : Turn us away, and we will burn you first.
+RESPONSE : Enough , my lord she
+INPUT : A girl gives a man his own name?
+RESPONSE : and surely you might keep ?
+INPUT : A dragon is not a slave.
+RESPONSE : under their good head .
+INPUT : The Lannisters send their regards 
+RESPONSE : the only , <unk> again .
