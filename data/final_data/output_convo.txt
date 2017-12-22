@@ -518,3 +518,16 @@ INPUT : Where is the war
 RESPONSE : Jon had three axe and the cold Kingdoms .
 INPUT : Who is Jon
 RESPONSE : i His uncle is four i
+INPUT : who are you
+INPUT : Who are you
+INPUT : hi
+INPUT : Who are you
+RESPONSE : Lannister . Tarth the Yes .
+INPUT : hi
+RESPONSE : <unk> .
+INPUT : li
+RESPONSE : <unk> .
+INPUT : huu
+RESPONSE : <unk> .
+INPUT : Tyrion
+RESPONSE : one had not more than the other .

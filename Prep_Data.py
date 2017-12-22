@@ -2,7 +2,7 @@ import os
 import re
 import fileinput
 import random
-import Config
+import Config_Params
 from nltk.tokenize import moses
 import nltk
 import numpy as np
@@ -61,10 +61,10 @@ def __dataset_subs__(prep_filename):
     test_idx = random.sample(range(0, len(list_lines)), len(list_lines)/6)
 
     # Take 2 lines each for encoder and 2 each for decoder from list for conversation link buildup
-    encoder_lines = open(Config.proc_data_dir + 'train_encoder', 'w')
-    decoder_lines = open(Config.proc_data_dir + 'train_decoder', 'w')
-    test_encoder_lines = open(Config.proc_data_dir + 'test_encoder', 'w')
-    test_decoder_lines = open(Config.proc_data_dir + 'test_decoder', 'w')
+    encoder_lines = open(Config_Params.proc_data_dir + 'train_encoder', 'w')
+    decoder_lines = open(Config_Params.proc_data_dir + 'train_decoder', 'w')
+    test_encoder_lines = open(Config_Params.proc_data_dir + 'test_encoder', 'w')
+    test_decoder_lines = open(Config_Params.proc_data_dir + 'test_decoder', 'w')
     enc_dec_flag = 1  # To take alternate values in encoder, decoder
 
     for line_idx in xrange(0, len(list_lines)-1, 2):
@@ -109,10 +109,10 @@ def __dataset_books__(prep_filename):
     test_idx = random.sample(range(0, len(list_lines)), len(list_lines)/6)
 
     # Take 2 lines each for encoder and 2 each for decoder from list for conversation link buildup
-    encoder_lines = open(Config.proc_data_dir + 'train1_encoder', 'w')
-    decoder_lines = open(Config.proc_data_dir + 'train1_decoder', 'w')
-    test_encoder_lines = open(Config.proc_data_dir + 'test1_encoder', 'w')
-    test_decoder_lines = open(Config.proc_data_dir + 'test1_decoder', 'w')
+    encoder_lines = open(Config_Params.proc_data_dir + 'train1_encoder', 'w')
+    decoder_lines = open(Config_Params.proc_data_dir + 'train1_decoder', 'w')
+    test_encoder_lines = open(Config_Params.proc_data_dir + 'test1_encoder', 'w')
+    test_decoder_lines = open(Config_Params.proc_data_dir + 'test1_decoder', 'w')
     enc_dec_flag = 1  # To take alternate values in encoder, decoder
 
     for line_idx in xrange(0, len(list_lines)-1, 1):
@@ -143,10 +143,10 @@ def __dataset_books__(prep_filename):
 
 
 # Call dataset books function
-#(__dataset_books__(Config.proc_data_dir + 'bk_proc_text.txt'))
+#(__dataset_books__(Config_Params.proc_data_dir + 'bk_proc_text.txt'))
 
 # Call dataset function
-#(__dataset_subs__(Config.proc_data_dir + 'pre_no_spaces.txt'))
+#(__dataset_subs__(Config_Params.proc_data_dir + 'pre_no_spaces.txt'))
 
 
 # Now merge both files from books and subs, I have merged it manually in folder in final_data.
@@ -154,8 +154,8 @@ def __dataset_books__(prep_filename):
 
 # Create Vocab for each decoder and encoder files
 def __create_conv_vocab__(filename):
-    in_path = os.path.join(Config.final_data, filename)
-    out_path = os.path.join(Config.final_data, 'vocab.{}'.format(filename[-3:]))
+    in_path = os.path.join(Config_Params.final_data, filename)
+    out_path = os.path.join(Config_Params.final_data, 'vocab.{}'.format(filename[-3:]))
 
     tokenizer = moses.MosesTokenizer()  # For Tokens
 
@@ -179,8 +179,8 @@ def __create_conv_vocab__(filename):
         f.write('<\s>' + '\n')
         index = 4
         for word in sorted_vocab:
-            if vocab[word] < Config.THRESHOLD:
-                with open('Config.py', 'ab') as cf:
+            if vocab[word] < Config_Params.THRESHOLD:
+                with open('Config_Params.py', 'ab') as cf:
                     if filename[-3:] == 'enc':
                         cf.write('ENC_VOCAB = ' + str(index) + '\n')
                     else:
@@ -207,9 +207,9 @@ def __map_vocab__(data, mode):
     in_path = data + '.' + mode
     out_path = data + '_ids.' + mode
 
-    _, vocab = load_vocab(os.path.join(Config.final_data, vocab_path))
-    in_file = open(os.path.join(Config.final_data, in_path), 'rb')
-    out_file = open(os.path.join(Config.final_data, out_path), 'wb')
+    _, vocab = load_vocab(os.path.join(Config_Params.final_data, vocab_path))
+    in_file = open(os.path.join(Config_Params.final_data, in_path), 'rb')
+    out_file = open(os.path.join(Config_Params.final_data, out_path), 'wb')
 
     lines = in_file.read().splitlines()
     for line in lines:
@@ -234,11 +234,11 @@ def __map_vocab__(data, mode):
 
 def gen_buckets(enc, dec): # encoder and decoder file generated from map_vocab
 
-    encode_file = open(os.path.join(Config.final_data, enc), 'rb')
-    decode_file = open(os.path.join(Config.final_data, dec), 'rb')
+    encode_file = open(os.path.join(Config_Params.final_data, enc), 'rb')
+    decode_file = open(os.path.join(Config_Params.final_data, dec), 'rb')
 
     encode, decode = encode_file.readline(), decode_file.readline()
-    data_buckets = [[] for _ in Config.BUCKETS]
+    data_buckets = [[] for _ in Config_Params.BUCKETS]
 
     i = 0
     while encode and decode:
@@ -248,7 +248,7 @@ def gen_buckets(enc, dec): # encoder and decoder file generated from map_vocab
         encode_ids = [int(id_) for id_ in encode.split()]
         decode_ids = [int(id_) for id_ in decode.split()]
 
-        for bucket_id, (encode_max_size, decode_max_size) in enumerate(Config.BUCKETS):
+        for bucket_id, (encode_max_size, decode_max_size) in enumerate(Config_Params.BUCKETS):
 
             if len(encode_ids) <= encode_max_size and len(decode_ids) <= decode_max_size:
                 data_buckets[bucket_id].append([encode_ids, decode_ids])
@@ -262,7 +262,7 @@ def gen_buckets(enc, dec): # encoder and decoder file generated from map_vocab
 # Prepare batch from buckets to feed into model
 
 def _pad_input(input_, size):
-    return input_ + [Config.PAD_ID] * (size - len(input_))
+    return input_ + [Config_Params.PAD_ID] * (size - len(input_))
 
 def _reshape_batch(inputs, size, batch_size):
     """ Create batch-major inputs. Batch inputs are just re-indexed inputs
@@ -277,7 +277,7 @@ def _reshape_batch(inputs, size, batch_size):
 def get_batch(data_bucket, bucket_id, batch_size=1):
     """ Return one batch to feed into the model """
     # only pad to the max length of the bucket
-    encoder_size, decoder_size = Config.BUCKETS[bucket_id]
+    encoder_size, decoder_size = Config_Params.BUCKETS[bucket_id]
     encoder_inputs, decoder_inputs = [], []
 
     for _ in range(batch_size):
@@ -299,7 +299,7 @@ def get_batch(data_bucket, bucket_id, batch_size=1):
             # the corresponding decoder is decoder_input shifted by 1 forward.
             if length_id < decoder_size - 1:
                 target = decoder_inputs[batch_id][length_id + 1]
-            if length_id == decoder_size - 1 or target == Config.PAD_ID:
+            if length_id == decoder_size - 1 or target == Config_Params.PAD_ID:
                 batch_mask[batch_id] = 0.0
         batch_masks.append(batch_mask)
     return batch_encoder_inputs, batch_decoder_inputs, batch_masks

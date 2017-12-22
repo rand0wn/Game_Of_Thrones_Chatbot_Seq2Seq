@@ -1,4 +1,4 @@
-# Contains all configuration options for the project
+# Configuration params for the project
 
 
 got_subs_dir = './Subs_Data_GOT'  # Unprocessed Data Dir
@@ -6,11 +6,7 @@ proc_data_dir = './data/' # Processed Data Dir
 final_data = proc_data_dir + 'final_data/'
 THRESHOLD = 2
 
-# Real Vocab Sizes
-# ENC_VOCAB = 8107
-# DEC_VOCAB = 8090
-
-#Cornell Vocab Sizes
+#Vocab Sizes
 ENC_VOCAB = 24426
 DEC_VOCAB = 24674
 
@@ -26,7 +22,7 @@ PROCESSED_PATH = proc_data_dir
 DATA_PATH = got_subs_dir
 
 PROCESSED_PATH = final_data
-CPT_PATH = 'checkpoints_1'
+CPT_PATH = 'checkpoints'
 
 THRESHOLD = 2
 
