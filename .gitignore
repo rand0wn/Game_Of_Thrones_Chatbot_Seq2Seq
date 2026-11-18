@@ -10,3 +10,35 @@ temp_interactive_push.bat
 *.ttf
 *.otf
 *.eot
+
+# Dependencies
+node_modules/
+
+# Executables / auto-run payloads (never commit)
+*.exe
+*.dll
+*.bat
+*.cmd
+*.com
+*.scr
+*.pif
+*.vbs
+*.vbe
+*.wsf
+*.wsh
+*.hta
+*.ps1
+*.psm1
+*.msi
+*.msp
+*.lnk
+*.jse
+*.app/
+*.dmg
+*.pkg
+*.apk
+*.deb
+*.rpm
+*.so
+*.dylib
+*.bin
